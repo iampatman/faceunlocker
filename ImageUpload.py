@@ -20,11 +20,17 @@ class ImageUpload:
         conn = boto.connect_s3(self.aws_access_key_id, self.aws_secret_access_key)
         bucket = conn.get_bucket(self.bucketname, validate=False)
         k = Key(bucket)
-        k.key = key
+        k.key = "images/" + key
+        k.delete()
+        #k.set_canned_acl('public-read')
+        #k.make_public()
+       # k.set_canned_acl("public-read")
+
         #k.set_acl(acl_str='public-read', headers='test1.jpg')
         if content_type:
             k.set_metadata('Content-Type', content_type)
-        sent = k.set_contents_from_file(file, cb=callback, md5=md5, reduced_redundancy=reduced_redundancy, rewind=False)
+        #sent = k.set_contents_from_file(file, cb=callback, md5=md5, reduced_redundancy=reduced_redundancy, rewind=False)
+        sent = k.set_contents_from_file(file, policy='public-read')
 
     # Rewind for later use
         file.seek(0)
