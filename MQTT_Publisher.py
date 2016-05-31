@@ -1,5 +1,4 @@
 from paho.mqtt.client import *
-from paho.mqtt.publish import *
 import datetime
 
 client = Mosquitto("my_id_pub")
