@@ -9,7 +9,6 @@ class MotionSensor(Sensor):
     def onStateChange(self, channel):
         print "%s: pin: %d state: %d" % (time.asctime(), channel, self.getState())
 
-
 def main():
     sensor = MotionSensor(17)
     sensor.setEvent(GPIO.BOTH)
