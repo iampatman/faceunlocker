@@ -4,5 +4,5 @@ import datetime
 client = Mosquitto("my_id_pub")
 client.connect("localhost")
 message = str(datetime.datetime.now())
-topic = "temp1"
+topic = "tem"
 client.publish(topic, message)
