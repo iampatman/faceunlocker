@@ -2,14 +2,14 @@ import os
 import boto
 from boto.s3.key import Key
 
+
 class ImageUpload:
     def __init__(self, aws_access_key_id, aws_secret_access_key, bucketname):
         self.aws_access_key_id = aws_access_key_id
         self.aws_secret_access_key = aws_secret_access_key
         self.bucketname = bucketname
 
-
-    def upload_to_s3(self, file, key, callback=None, md5=None, reduced_redundancy=False, content_type=None):
+    def upload_to_s3(self, file, key, content_type=None):
         try:
             size = os.fstat(file.fileno()).st_size
         except:
@@ -24,10 +24,9 @@ class ImageUpload:
         k.delete()
         if content_type:
             k.set_metadata('Content-Type', content_type)
-        #sent = k.set_contents_from_file(file, cb=callback, md5=md5, reduced_redundancy=reduced_redundancy, rewind=False)
         sent = k.set_contents_from_file(file, policy='public-read')
 
-    # Rewind for later use
+        # Rewind for later use
         file.seek(0)
 
         if sent == size:
@@ -52,6 +51,6 @@ def main():
     else:
         print 'The upload failed...'
 
+
 if __name__ == "__main__":
     main()
-

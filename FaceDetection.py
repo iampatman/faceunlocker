@@ -2,7 +2,6 @@ import httplib
 import json
 import urllib
 
-
 class FaceDetection:
     def __init__(self, apiUrl="api.projectoxford.ai", key="d2495e1c650941ecbf2598373f5243c4"):
         self.apiKey = key
