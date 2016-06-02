@@ -37,6 +37,8 @@ class FaceDetection:
         }
         method = "/face/v1.0/verify"
         returnData = self.sendHTTPSRequest(param, method, body)
+        if returnData.__contains__("error"):
+            return 0
         isIdentical = returnData["isIdentical"]
         result = 0
         if isIdentical:
