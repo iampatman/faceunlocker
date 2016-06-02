@@ -1,8 +1,14 @@
 from paho.mqtt.client import *
 import datetime
 
-client = Mosquitto("my_id_pub")
-client.connect("localhost")
-message = str(datetime.datetime.now())
-topic = "tem"
-client.publish(topic, message)
+
+class MQTT_Center:
+    def __init__(self, pubid, host):
+        self.id = pubid
+        self.host = host
+        self.client = Mosquitto(self.id)
+        self.client.connect(self.host)
+
+    def publish(self, topic, message):
+        self.client.publish(topic, message)
+

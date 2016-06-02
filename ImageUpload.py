@@ -25,13 +25,16 @@ class ImageUpload:
         if content_type:
             k.set_metadata('Content-Type', content_type)
         sent = k.set_contents_from_file(file, policy='public-read')
-
         # Rewind for later use
         file.seek(0)
 
         if sent == size:
-            return True
-        return False
+            url = "https://s3-ap-northeast-1.amazonaws.com/"
+            url = url + self.bucketname
+            url = url + "/" + key
+            print (url)
+            return url
+        return ""
 
 
 def main():
@@ -46,7 +49,7 @@ def main():
     imageUpload = ImageUpload(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                               bucketname=bucketname)
 
-    if imageUpload.upload_to_s3(file, key):
+    if imageUpload.upload_to_s3(file, key) != "":
         print 'It worked!'
     else:
         print 'The upload failed...'

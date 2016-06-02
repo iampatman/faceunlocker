@@ -2,18 +2,22 @@ from RP.MotionSensor import *
 from RP import *
 from ImageUpload import *
 from FaceDetection import *
-
+from MQTT_Publisher import *
 #Template images id
 imageIds = ["c594c66a-4442-4860-963a-ebc9a5d82ead"]
-
+imageUrls = []
 #AWS S3 Config
-AWS_ACCESS_KEY_ID = 'AKIAIG7FK44VPPQHPO7A'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = 'x'
+AWS_SECRET_ACCESS_KEY = 'x'
 bucketname = 'trung-aws-s3'
 
 
 def main():
     sensor = Sensor(17)
+    print ("start face detector")
+    fd = FaceDetection()
+    print ("starting done")
+    mqtt = MQTT_Center(host="dkiong.no-ip.biz",pubid="myid")
     while True:
         sensor.waitFor(GPIO.RISING);
         print "Sensor is %d" % (sensor.getState())
@@ -38,21 +42,25 @@ def main():
 
         imageUpload = ImageUpload(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                                   bucketname=bucketname)
-
-        if imageUpload.upload_to_s3(file, key):
+        newImageURL = "https://s3-ap-northeast-1.amazonaws.com/trung-aws-s3/test1.jpg"
+        newImageURL = imageUpload.upload_to_s3(file, key)
+        if newImageURL != "":
             print 'File uploaded'
         else:
             print 'File upload failed...'
 
-        newImageURL = "http://sth.com/newfile.jpg"
 
         # Using MS API to compare
 
-        fd = FaceDetection()
-        fd.identifyFace(newImageURL)
+        confidence = fd.identifyFace(newImageURL)
 
         #MQTT Notify
 
+        if confidence < 0.5:
+            mqtt.publish(topic="trung", message=newImageURL)
+
+        else:
+            #Open the door, display welcome message
         # sensor.waitFor(GPIO.FALLING);
         # print "Sensor is %d" % (sensor.getState())
 
