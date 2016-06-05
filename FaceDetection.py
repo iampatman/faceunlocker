@@ -71,8 +71,6 @@ class FaceDetection:
             print "Log: Got result from URL"
             data = response.read()
             # Validate the received data to see whether it is in json format
-
-
             dict = json.loads(data)
             print "Log: Result %s" % dict
             conn.close()

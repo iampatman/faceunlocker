@@ -13,6 +13,10 @@ class Relay:
         GPIO.setup(pin, GPIO.OUT)
         GPIO.output(pin, (GPIO.HIGH if state == 0 else GPIO.LOW))
 
+    def switchall(self,state):
+        for i in range(1, 5):
+            self.switch(i, state=state)
+
 
 def main():
     if len(sys.argv) > 2:

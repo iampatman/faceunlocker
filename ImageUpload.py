@@ -38,8 +38,8 @@ class ImageUpload:
 
 
 def main():
-    AWS_ACCESS_KEY_ID = 'AKIAIG7FK44VPPQHPO7A'
-    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_ACCESS_KEY_ID = 'x'
+    AWS_SECRET_ACCESS_KEY = 'x'
 
     file = open('test1.jpg', 'r+')
 
