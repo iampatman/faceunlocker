@@ -12,25 +12,25 @@ from ConfigLoader import *
 
 def main():
 
-    # sensor = Sensor(17)
+    sensor = Sensor(17)
     config = ConfigLoader("config//development.ini")
     print ("start face detector")
     fd = FaceDetection(patternIds=config.imageid, patternUrls=config.imagesurl)
     print ("starting done")
-    # lcd = Lcd()
+    lcd = Lcd()
     mqtt = MQTTCenter(host=config.mqtt_host, pubid=config.mqtt_id)
     while True:
 
-        # sensor.waitFor(GPIO.RISING);
-        # print "Sensor is %d" % (sensor.getState())
+        sensor.waitFor(GPIO.RISING);
+        print "Sensor is %d" % (sensor.getState())
 
-        # lcd.clear()
-        # lcd.display_string("Capturing in: ", 1)
-        # lcd.display_string("seconds", 3)
-        # i = 1
-        # for i in range(1, 5, 1):
-        #     time.sleep(1)
-        #     lcd.display_string(i, 2)
+        lcd.clear()
+        lcd.display_string("Capturing in: ", 1)
+        lcd.display_string("seconds", 3)
+        i = 1
+        for i in range(1, 5, 1):
+            time.sleep(1)
+            lcd.display_string(i, 2)
 
         # Capture picture function returns path to the new picture
 
@@ -65,10 +65,9 @@ def main():
             mqtt.publish(topic="askforpermission", message=newImageURL)
             while mqtt.currentKey != "":
                 mqtt.client.loop()
-                # imprint time.time()
         else:
             print ("Door opened")
-                # mqtt.opendoor()
+                mqtt.opendoor()
 
             # Open the door, display welcome message
             # sensor.waitFor(GPIO.FALLING);

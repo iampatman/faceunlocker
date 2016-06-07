@@ -54,10 +54,10 @@ class MQTTCenter:
         self.currentKey = ""
         if self.open:
             print ("open")
-            # self.open()
+            self.open()
         else:
             print ("deny")
-            # self.denyopeningdoor(param[1])
+            self.denyopeningdoor(param[1])
 
 
 def main():
