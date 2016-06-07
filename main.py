@@ -64,7 +64,7 @@ def main():
             print ("fake images")
         elif confidence < 0.7:
             print (time.time())
-            mqtt.publish(topic="askforpermission", message=newImageURL)
+            mqtt.publish(topic="trung", message=newImageURL)
             while mqtt.currentKey != "":
                 mqtt.client.loop()
         else:

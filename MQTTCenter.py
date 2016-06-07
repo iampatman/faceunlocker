@@ -11,7 +11,7 @@ class MQTTCenter:
         self.client.connect(host=self.host)
         self.time = time.time()
         self.client.on_message = self.on_message
-        self.client.subscribe("decision")
+        self.client.subscribe("trung1")
         self.currentKey = ""
         self.open = False
         self.lcd = lcd
@@ -48,7 +48,7 @@ class MQTTCenter:
         self.timer.cancel()
         currentTime = time.time()
         difTime = currentTime - self.time
-        if difTime < 120:
+        if difTime < 30:
             if len(param) == 3 and param[2] == self.currentKey:
                 self.open = (param[0] == "Accept")
         self.currentKey = ""
