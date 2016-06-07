@@ -24,7 +24,7 @@ class MQTTCenter:
         self.currentKey = sig
         data = message + "|" + sig
         print ("Message published: %s" % data)
-        self.client.publish(topic, data)
+        self.client.publish(topic, data, qos=1)
         self.timer = Timer(30, self.stoplistening)
         self.timer.start()
 
@@ -33,13 +33,16 @@ class MQTTCenter:
         self.currentKey = ""
 
     def opendoor(self):
+	self.lcd.clear()
         self.lcd.display_string(line=0, string="Welcome home")
         self.relay.switchall(int(1))
-        time.sleep(10)
+        time.sleep(5)
         self.relay.switchall(int(0))
 
     def denyopeningdoor(self, message):
+	self.lcd.clear()
         self.lcd.display_string(line=0, string=message)
+	time.sleep(5)
 
     def on_message(self, c, userdata, mesg):
         print "message: %s %s %s" % (userdata, mesg.topic, mesg.payload)
