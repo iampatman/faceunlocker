@@ -2,9 +2,10 @@ from ImageUpload import *
 from FaceDetection import *
 from MQTTCenter import *
 from ConfigLoader import *
-# from RP.Sensor import *
-# from RP.LCDDisplay import import *
-
+from RP.Sensor import *
+from RP.LCDDisplay import *
+from RP.Relay import *
+import time
 
 # Template images id
 
@@ -13,27 +14,28 @@ from ConfigLoader import *
 def main():
 
     sensor = Sensor(17)
-    config = ConfigLoader("config//development.ini")
+    config = ConfigLoader("config//configuration.ini")
     print ("start face detector")
     fd = FaceDetection(patternIds=config.imageid, patternUrls=config.imagesurl)
     print ("starting done")
     lcd = Lcd()
-    mqtt = MQTTCenter(host=config.mqtt_host, pubid=config.mqtt_id)
+    lcd.clear()
+    relay = Relay()
+    mqtt = MQTTCenter(host=config.mqtt_host, pubid=config.mqtt_id, lcd=lcd,relay=relay)
     while True:
-
+        print "Sensor is waiting"
         sensor.waitFor(GPIO.RISING);
         print "Sensor is %d" % (sensor.getState())
-
         lcd.clear()
         lcd.display_string("Capturing in: ", 1)
         lcd.display_string("seconds", 3)
         i = 1
         for i in range(1, 5, 1):
             time.sleep(1)
-            lcd.display_string(i, 2)
+            lcd.display_string(str(i), 2)
 
         # Capture picture function returns path to the new picture
-
+        lcd.clear()
         # Ankan: write your function and use it here, assign the return path into the filePath variable
         filePath = raw_input("Type in the file name: ")
         # filePath = "images//ramsey.jpg"
@@ -60,14 +62,14 @@ def main():
         # MQTT Notify
         if confidence < 0:
             print ("fake images")
-        elif confidence < 1:
+        elif confidence < 0.7:
             print (time.time())
             mqtt.publish(topic="askforpermission", message=newImageURL)
             while mqtt.currentKey != "":
                 mqtt.client.loop()
         else:
             print ("Door opened")
-                mqtt.opendoor()
+            mqtt.opendoor()
 
             # Open the door, display welcome message
             # sensor.waitFor(GPIO.FALLING);

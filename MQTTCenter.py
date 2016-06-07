@@ -34,9 +34,9 @@ class MQTTCenter:
 
     def opendoor(self):
         self.lcd.display_string(line=0, string="Welcome home")
-        self.relay.switchall(1)
+        self.relay.switchall(int(1))
         time.sleep(10)
-        self.relay.switchall(0)
+        self.relay.switchall(int(0))
 
     def denyopeningdoor(self, message):
         self.lcd.display_string(line=0, string=message)
@@ -54,7 +54,7 @@ class MQTTCenter:
         self.currentKey = ""
         if self.open:
             print ("open")
-            self.open()
+            self.opendoor()
         else:
             print ("deny")
             self.denyopeningdoor(param[1])

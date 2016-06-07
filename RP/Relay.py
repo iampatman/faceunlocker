@@ -14,11 +14,13 @@ class Relay:
         GPIO.output(pin, (GPIO.HIGH if state == 0 else GPIO.LOW))
 
     def switchall(self,state):
-        for i in range(1, 5):
+        for i in range(0, 4):
             self.switch(i, state=state)
 
 
 def main():
+    r = Relay()
+    r.switchall(int(1))
     if len(sys.argv) > 2:
         [cmd, lamp, state] = sys.argv
         lamp = int(lamp)  # which lamp?
