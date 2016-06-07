@@ -24,8 +24,9 @@ class FaceDetection:
         returnData = self.sendHTTPSRequest(param, method, body)
         faceId = ""
         if not returnData == "":
-            dict = returnData[0]
-            faceId = dict['faceId']
+            if len(returnData)>0:
+                dict = returnData[0]
+                faceId = dict['faceId']
         print faceId
         return faceId
 
@@ -43,12 +44,14 @@ class FaceDetection:
         result = 0
         if isIdentical:
             result = returnData["confidence"]
-        print result
+        # print result
         return result
 
     def identifyFace(self, imageUrl):
         faceId = self.getFaceId(imageUrl)
         maxConfidence = 0
+        if faceId == "":
+            return -1
         for imageId in self.imagesPatternId:
             result = self.compare2Faces(faceId, imageId)
             print result

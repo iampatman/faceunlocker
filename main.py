@@ -3,6 +3,7 @@ from FaceDetection import *
 from MQTTCenter import *
 from ConfigLoader import *
 # from RP.Sensor import *
+# from RP.LCDDisplay import import *
 
 
 # Template images id
@@ -19,6 +20,7 @@ def main():
     # lcd = Lcd()
     mqtt = MQTTCenter(host=config.mqtt_host, pubid=config.mqtt_id)
     while True:
+
         # sensor.waitFor(GPIO.RISING);
         # print "Sensor is %d" % (sensor.getState())
 
@@ -34,44 +36,43 @@ def main():
 
         # Ankan: write your function and use it here, assign the return path into the filePath variable
         filePath = raw_input("Type in the file name: ")
-
         # filePath = "images//ramsey.jpg"
-
+        key = filePath
         # Upload to S3
+        filePath = "images//%s" % (filePath)
         file = open(filePath, 'r+')
 
-        key = file.name.split("//")[1]
+        # key = file.name.split("//")[1]
 
         imageUpload = ImageUpload(aws_access_key_id=config.AWS_ACCESS_KEY_ID,
                                   aws_secret_access_key=config.AWS_SECRET_ACCESS_KEY,
                                   bucketname=config.bucketname)
+        print ("Uploading file")
         newImageURL = imageUpload.upload_to_s3(file, key)
         if newImageURL != "":
             print 'File uploaded'
         else:
             print 'File upload failed...'
-
         # Using MS API to compare
-
         confidence = fd.identifyFace(newImageURL)
         print ("Confidence: " + str(confidence))
 
         # MQTT Notify
-
-        if confidence < 0.7:
-            senttime = time.time()
+        if confidence < 0:
+            print ("fake images")
+        elif confidence < 1:
             print (time.time())
-            mqtt.publish(topic="trung", message=newImageURL)
+            mqtt.publish(topic="askforpermission", message=newImageURL)
             while mqtt.currentKey != "":
                 mqtt.client.loop()
-                print ("hi")
+                # imprint time.time()
         else:
             print ("Door opened")
-            # mqtt.opendoor()
+                # mqtt.opendoor()
 
-        # Open the door, display welcome message
-        # sensor.waitFor(GPIO.FALLING);
-        # print "Sensor is %d" % (sensor.getState())
+            # Open the door, display welcome message
+            # sensor.waitFor(GPIO.FALLING);
+            # print "Sensor is %d" % (sensor.getState())
 
 
 if __name__ == "__main__":
